@@ -304,9 +304,6 @@ class _HomeScreenState extends State<HomeScreen>
           Checkbox(
             onChanged: onChanged,
             value: value,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(kBorderRadius * .2),
-            ),
           ),
           Text(title)
         ],

@@ -29,5 +29,8 @@ ThemeData lightTheme = ThemeData(
   ),
   checkboxTheme: CheckboxThemeData(
     fillColor: MaterialStateProperty.all(primaryColor),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(kBorderRadius * .2),
+    ),
   ),
 );
