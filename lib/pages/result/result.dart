@@ -33,42 +33,66 @@ class ResultPage extends StatelessWidget {
           ),
           builder: (context, snapshot) {
             List<Holiday> holidays = snapshot.data ?? [];
-            return CustomScrollView(
-              physics: const BouncingScrollPhysics(),
-              slivers: [
-                const SliverAppBar(
-                  title: Text("Available Holidays"),
-                ),
-                SliverToBoxAdapter(
-                  child: LayoutBuilder(builder: (context, constraints) {
-                    return Container(
-                      width: constraints.maxWidth,
-                      height: constraints.maxWidth,
-                      padding: const EdgeInsets.all(kPadding * 4),
-                      child: RadialProgressWidget(
-                        max: HolidayController.getDaysFromRange(dateTimeRange)
-                            .round(),
-                        value: holidays.length,
-                      ),
-                    );
-                  }),
-                ),
-                if (snapshot.hasData)
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(vertical: kPadding / 2),
-                    sliver: SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          return _holidayCard(context,
-                              holiday: holidays[index]);
-                        },
-                        childCount: holidays.length,
-                      ),
-                    ),
-                  )
-              ],
+
+            if (snapshot.connectionState == ConnectionState.done) {
+              return _body(holidays, snapshot.hasData);
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
+            } else {
+              return Scaffold(
+                appBar: _appbar(),
+                body: const Center(child: Text("Hmm, Having Trouble")),
+              );
+            }
+          }),
+    );
+  }
+
+  AppBar _appbar() {
+    return AppBar(
+      title: const Text("Available Holidays"),
+    );
+  }
+
+  CustomScrollView _body(List<Holiday> holidays, bool hasData) {
+    return CustomScrollView(
+      physics: const BouncingScrollPhysics(),
+      slivers: [
+        const SliverAppBar(
+          title: Text("Available Holidays"),
+        ),
+        SliverToBoxAdapter(
+          child: LayoutBuilder(builder: (context, constraints) {
+            return Container(
+              width: constraints.maxWidth,
+              height: constraints.maxWidth,
+              padding: const EdgeInsets.all(kPadding * 4),
+              child: RadialProgressWidget(
+                max: HolidayController.getDaysFromRange(dateTimeRange).round(),
+                value: holidays.length,
+              ),
             );
           }),
+        ),
+        if (hasData)
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(vertical: kPadding / 2),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return _holidayCard(context, holiday: holidays[index]);
+                },
+                childCount: holidays.length,
+              ),
+            ),
+          ),
+        if (holidays.isEmpty)
+          const SliverToBoxAdapter(
+            child: Center(child: Text(":( You have no Any Holidays")),
+          ),
+      ],
     );
   }
 
