@@ -6,7 +6,6 @@ import 'package:holyday_calculator/domain/models/date_tag.dart';
 import 'package:holyday_calculator/domain/models/holyday.dart';
 import 'package:holyday_calculator/pages/result/radial_progress.dart';
 import 'package:intl/intl.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class ResultPage extends StatelessWidget {
   final DateTimeRange dateTimeRange;

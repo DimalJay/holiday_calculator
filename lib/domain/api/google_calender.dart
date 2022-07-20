@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:holyday_calculator/.env.dart';
 import 'package:holyday_calculator/domain/api/exceptions.dart';
 import 'package:http/http.dart' as http;
 
@@ -12,7 +13,7 @@ class GoogleCalenderApi {
 
   Future<http.Response> _getRequest() async {
     final queryParameters = {
-      'key': 'AIzaSyC3T2GIjQus7baGuq8SAfuzZTzE5weIS4Y',
+      'key': Config.googleApiKey,
     };
 
     Uri uri = Uri.https(

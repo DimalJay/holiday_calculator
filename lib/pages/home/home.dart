@@ -25,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen>
   bool isSun = true;
   String country = "lk";
 
+  // Admob
   late AdmobIntergration admobIntergration;
 
   // Animation Controller
@@ -36,8 +37,8 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   void initState() {
+    // Admob Initialization
     admobIntergration = AdmobIntergration();
-    admobIntergration.createInterstitialAd();
     admobIntergration.createRewardedInterstitialAd();
 
     // Animation
