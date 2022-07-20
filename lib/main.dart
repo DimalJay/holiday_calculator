@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:holyday_calculator/constraints/theme/dark_theme.dart';
+import 'package:holyday_calculator/constraints/theme/light_theme.dart';
 import 'package:holyday_calculator/pages/home/home.dart';
-import 'package:holyday_calculator/theme/dark_theme.dart';
-import 'package:holyday_calculator/theme/light_theme.dart';
+import 'package:holyday_calculator/pages/settings/setings.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,8 +20,12 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: lightTheme,
       darkTheme: darkTheme,
-      home: const HomeScreen(),
       debugShowCheckedModeBanner: false,
+      initialRoute: "/",
+      routes: {
+        "/": (context) => const HomeScreen(),
+        "/settings": (context) => const SettingsPage(),
+      },
     );
   }
 }

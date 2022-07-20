@@ -8,32 +8,32 @@ class DrawerWidget extends StatelessWidget {
     DraweItem(
       title: "Settings",
       icon: Icons.settings_outlined,
-      widget: const SizedBox(),
+      route: "/settings",
     ),
     DraweItem(
       title: "About Us",
       icon: Icons.info_outline_rounded,
-      widget: const SizedBox(),
+      route: "/",
     ),
     DraweItem(
       title: "Privacy Policy",
       icon: Icons.privacy_tip_outlined,
-      widget: const SizedBox(),
+      route: "/",
     ),
     DraweItem(
       title: "Terms & Conditions",
       icon: Icons.text_snippet_outlined,
-      widget: const SizedBox(),
+      route: "/",
     ),
     DraweItem(
       title: "Contact Us",
       icon: Icons.call,
-      widget: const SizedBox(),
+      route: "/",
     ),
     DraweItem(
       title: "Support and Help",
       icon: Icons.contact_support_outlined,
-      widget: const SizedBox(),
+      route: "/",
     ),
   ];
 
@@ -43,7 +43,7 @@ class DrawerWidget extends StatelessWidget {
       child: Column(
         children: [
           const DrawerHeader(child: FlutterLogo(size: 60)),
-          ...data.map((e) => _draweTile(e)),
+          ...data.map((item) => _draweTile(context, item: item)),
           const Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -96,27 +96,31 @@ class DrawerWidget extends StatelessWidget {
     );
   }
 
-  ListTile _draweTile(DraweItem draweItem) => ListTile(
+  ListTile _draweTile(BuildContext context, {required DraweItem item}) =>
+      ListTile(
         leading: Container(
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
                 shape: BoxShape.circle, color: primaryColor.withOpacity(0.125)),
             child: Icon(
-              draweItem.icon,
+              item.icon,
               color: primaryColor.withOpacity(0.6),
             )),
-        title: Text(draweItem.title),
+        title: Text(item.title),
+        onTap: () {
+          Navigator.popAndPushNamed(context, item.route);
+        },
       );
 }
 
 class DraweItem {
   final String title;
   final IconData icon;
-  final Widget widget;
+  final String route;
 
   DraweItem({
     required this.title,
     required this.icon,
-    required this.widget,
+    required this.route,
   });
 }
