@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:holyday_calculator/constraints/app_data.dart';
 import 'package:holyday_calculator/constraints/values.dart';
 import 'package:holyday_calculator/country_code.dart';
 import 'package:holyday_calculator/pages/admob.dart';
 import 'package:holyday_calculator/pages/home/suggestions.dart';
-import 'package:holyday_calculator/pages/result.dart';
+import 'package:holyday_calculator/pages/result/result.dart';
 import 'package:holyday_calculator/pages/widgets/date_picker.dart';
 import 'package:holyday_calculator/pages/widgets/drawer_widget.dart';
 import 'package:intl/intl.dart';
@@ -78,153 +77,143 @@ class _HomeScreenState extends State<HomeScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Suggested Holiday Ranges",
-                  style: Theme.of(context).textTheme.headline6),
+              // Build Title
+              _buildTitle(context),
+
               const SizedBox(height: kPadding * .8),
 
               // Suggestions List
-              HomeSuggestions(onPressed: (range) {
-                setState(() {
-                  dateRangePickerController.selectedRange = range;
-                  dateTimeRange = DateTimeRange(
-                    start: range.startDate ?? dateTimeRange.start,
-                    end: range.endDate ?? dateTimeRange.end,
-                  );
-                });
-              }, selected: (range) {
-                return range.startDate!.compareTo(dateTimeRange.start) == 0;
-              }),
-              SizedBox(
-                height: 50,
-                child: ListView(
-                  physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  children: suggestions.entries
-                      .map((e) => Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: kPadding * .5),
-                            child: RawChip(
-                                label: Text(e.key),
-                                backgroundColor: Colors.transparent,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        kBorderRadius / 1.5),
-                                    side: BorderSide(
-                                      width: 1.5,
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
-                                    )),
-                                labelStyle: TextStyle(
-                                    color:
-                                        Theme.of(context).colorScheme.primary),
-                                selected: e.value.startDate!
-                                        .compareTo(dateTimeRange.start) ==
-                                    0,
-                                selectedColor: primaryColor.withOpacity(0.2),
-                                onPressed: () {
-                                  setState(() {
-                                    dateRangePickerController.selectedRange =
-                                        e.value;
-                                    dateTimeRange = DateTimeRange(
-                                      start: e.value.startDate ??
-                                          dateTimeRange.start,
-                                      end: e.value.endDate ?? dateTimeRange.end,
-                                    );
-                                  });
-                                }),
-                          ))
-                      .toList(),
-                ),
-              ),
-              DropdownButton<String>(
-                value: country,
-                hint: const Text("Choose Country"),
-                icon: const Icon(Icons.keyboard_arrow_down_rounded),
-                elevation: 16,
-                isExpanded: true,
-                underline: Container(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    country = newValue!;
-                  });
-                },
-                items: countryCodes.map<DropdownMenuItem<String>>((value) {
-                  return DropdownMenuItem<String>(
-                    value: value['code'],
-                    child: Text(value['name']!),
-                  );
-                }).toList(),
-              ),
-              LayoutBuilder(builder: (context, constraints) {
-                return SizedBox(
-                  width: constraints.maxWidth,
-                  height: constraints.maxWidth * 1.3,
-                  child: DatePickerWidget(
-                    startDate: dateTimeRange.start,
-                    endDate: dateTimeRange.end,
-                    controller: dateRangePickerController,
-                    callBack: (dateRange) {
-                      setState(() {
-                        dateTimeRange = DateTimeRange(
-                          start: dateRange.startDate ?? dateTimeRange.start,
-                          end: dateRange.endDate ?? dateTimeRange.end,
-                        );
-                      });
-                    },
-                  ),
-                );
-              }),
-              Row(
-                children: [
-                  _weekendCheckBox(
-                      title: "Saturday is Holiday",
-                      value: isSat,
-                      onChanged: (value) {
-                        setState(() {
-                          isSat = value ?? false;
-                        });
-                      }),
-                  _weekendCheckBox(
-                      title: "Sunday is Holiday",
-                      value: isSun,
-                      onChanged: (value) {
-                        setState(() {
-                          isSun = value ?? false;
-                        });
-                      }),
-                ],
-              ),
+              _buildSuggestions(),
+
+              // Language Selector
+              _buildLangSelector(),
+
+              // Calaneder View
+              _calanderView(),
+
+              // Weekend Select
+              _weekendSelector(),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(kPadding),
-        child: ElevatedButton.icon(
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-              return ResultPage(
-                dateTimeRange: dateTimeRange,
-                onSat: isSat,
-                onSun: isSun,
-                language: country,
-              );
-            }));
-          },
-          style: ElevatedButton.styleFrom(
-            minimumSize: const Size.fromHeight(50),
-            textStyle: Theme.of(context).textTheme.headline6,
-            elevation: 1.0,
-            splashFactory: InkSplash.splashFactory,
-            primary: Theme.of(context).buttonTheme.colorScheme?.primary,
-            onPrimary: Colors.white,
-          ),
-          label: const Text(
-            "Calculate",
-          ),
-          icon: const Icon(Icons.calculate),
+      bottomNavigationBar: _buildBottomBarButton(context),
+    );
+  }
+
+  Widget _buildBottomBarButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(kPadding),
+      child: ElevatedButton.icon(
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+            return ResultPage(
+              dateTimeRange: dateTimeRange,
+              onSat: isSat,
+              onSun: isSun,
+              language: country,
+            );
+          }));
+        },
+        style: ElevatedButton.styleFrom(
+          minimumSize: const Size.fromHeight(50),
+          textStyle: Theme.of(context).textTheme.headline6,
+          elevation: 1.0,
+          splashFactory: InkSplash.splashFactory,
+          primary: Theme.of(context).buttonTheme.colorScheme?.primary,
+          onPrimary: Colors.white,
         ),
+        label: const Text(
+          "Calculate",
+        ),
+        icon: const Icon(Icons.calculate),
       ),
+    );
+  }
+
+  Text _buildTitle(BuildContext context) {
+    return Text("Suggested Holiday Ranges",
+        style: Theme.of(context).textTheme.headline6);
+  }
+
+  HomeSuggestions _buildSuggestions() {
+    return HomeSuggestions(onPressed: (range) {
+      setState(() {
+        dateRangePickerController.selectedRange = range;
+        dateTimeRange = DateTimeRange(
+          start: range.startDate ?? dateTimeRange.start,
+          end: range.endDate ?? dateTimeRange.end,
+        );
+      });
+    }, selected: (range) {
+      return range.startDate!.compareTo(dateTimeRange.start) == 0;
+    });
+  }
+
+  Row _weekendSelector() {
+    return Row(
+      children: [
+        _weekendCheckBox(
+            title: "Saturday is Holiday",
+            value: isSat,
+            onChanged: (value) {
+              setState(() {
+                isSat = value ?? false;
+              });
+            }),
+        _weekendCheckBox(
+            title: "Sunday is Holiday",
+            value: isSun,
+            onChanged: (value) {
+              setState(() {
+                isSun = value ?? false;
+              });
+            }),
+      ],
+    );
+  }
+
+  LayoutBuilder _calanderView() {
+    return LayoutBuilder(builder: (context, constraints) {
+      return SizedBox(
+        width: constraints.maxWidth,
+        height: constraints.maxWidth * 1.3,
+        child: DatePickerWidget(
+          startDate: dateTimeRange.start,
+          endDate: dateTimeRange.end,
+          controller: dateRangePickerController,
+          callBack: (dateRange) {
+            setState(() {
+              dateTimeRange = DateTimeRange(
+                start: dateRange.startDate ?? dateTimeRange.start,
+                end: dateRange.endDate ?? dateTimeRange.end,
+              );
+            });
+          },
+        ),
+      );
+    });
+  }
+
+  DropdownButton<String> _buildLangSelector() {
+    return DropdownButton<String>(
+      value: country,
+      hint: const Text("Choose Country"),
+      icon: const Icon(Icons.keyboard_arrow_down_rounded),
+      elevation: 16,
+      isExpanded: true,
+      underline: Container(),
+      onChanged: (String? newValue) {
+        setState(() {
+          country = newValue!;
+        });
+      },
+      items: countryCodes.map<DropdownMenuItem<String>>((value) {
+        return DropdownMenuItem<String>(
+          value: value['code'],
+          child: Text(value['name']!),
+        );
+      }).toList(),
     );
   }
 
