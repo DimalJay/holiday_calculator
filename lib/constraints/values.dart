@@ -16,3 +16,8 @@ const giftIcon = "assets/vectors/gift.png";
 
 const String defaultCountry = 'lk';
 const String language = 'en';
+
+const String facebookPage = 'https://facebook.com/teskilltechnologies';
+const String discordServer = 'https://facebook.com/teskilltechnologies';
+const String email =
+    'mailto:teskilltechnologies@gmail.com?subject=Holiday%20Calculator%20App';

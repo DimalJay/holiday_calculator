@@ -56,10 +56,10 @@ class _ResultPageState extends State<ResultPage> {
           ? 'ca-app-pub-3940256099942544/6300978111'
           : 'ca-app-pub-3940256099942544/2934735716',
       size: size,
-      request: AdRequest(),
+      request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
-          print('$ad loaded: ${ad.responseInfo}');
+          log('$ad loaded: ${ad.responseInfo}');
           setState(() {
             // When the ad is loaded, get the ad size and use it to set
             // the height of the ad container.

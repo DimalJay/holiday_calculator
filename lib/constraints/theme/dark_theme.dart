@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:holyday_calculator/constraints/theme/navigation_theme.dart';
 import 'package:holyday_calculator/constraints/values.dart';
 
 ThemeData darkTheme = ThemeData(
@@ -9,6 +10,7 @@ ThemeData darkTheme = ThemeData(
     surface: primaryColor,
     secondary: primaryColor,
   ),
+  pageTransitionsTheme: pageTransitionsTheme,
   textTheme: GoogleFonts.nunitoSansTextTheme(TextTheme(
     bodyText1: ThemeData.dark()
         .textTheme

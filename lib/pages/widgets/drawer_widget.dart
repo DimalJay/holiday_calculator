@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:holyday_calculator/constraints/values.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DrawerWidget extends StatelessWidget {
   DrawerWidget({Key? key}) : super(key: key);
@@ -18,15 +19,32 @@ class DrawerWidget extends StatelessWidget {
     DraweItem(
       title: "Privacy Policy",
       icon: Icons.privacy_tip_outlined,
-      route: "/",
+      route: "/privacy_policy",
     ),
-    DraweItem(
-      title: "Support and Help",
-      icon: Icons.contact_support_outlined,
-      route: "/",
-    ),
+    // DraweItem(
+    //   title: "Support and Help",
+    //   icon: Icons.contact_support_outlined,
+    //   route: "/support",
+    // ),
   ];
 
+  final socialMedia = [
+    SocialMediaButton(
+      title: "Facebook",
+      icon: Icons.facebook,
+      uri: Uri.parse(facebookPage),
+    ),
+    SocialMediaButton(
+      title: "Discord",
+      icon: Icons.discord,
+      uri: Uri.parse(discordServer),
+    ),
+    SocialMediaButton(
+      title: "Email",
+      icon: Icons.email_outlined,
+      uri: Uri.parse(email),
+    )
+  ];
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -37,40 +55,8 @@ class DrawerWidget extends StatelessWidget {
           const Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.facebook,
-                    size: 28.0,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.reddit,
-                    size: 28.0,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.email_outlined,
-                    size: 28.0,
-                  ),
-                ),
-              )
-            ],
+            children: socialMedia.map((e) => _socialMediaButton(e)).toList(),
           ),
-          const Spacer(),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: kPadding),
             child: Text(
@@ -79,6 +65,21 @@ class DrawerWidget extends StatelessWidget {
             ),
           )
         ],
+      ),
+    );
+  }
+
+  Padding _socialMediaButton(SocialMediaButton button) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: IconButton(
+        onPressed: () async {
+          await launchUrl(button.uri);
+        },
+        icon: Icon(
+          button.icon,
+          size: 28.0,
+        ),
       ),
     );
   }
@@ -109,5 +110,17 @@ class DraweItem {
     required this.title,
     required this.icon,
     required this.route,
+  });
+}
+
+class SocialMediaButton {
+  final String title;
+  final IconData icon;
+  final Uri uri;
+
+  SocialMediaButton({
+    required this.title,
+    required this.icon,
+    required this.uri,
   });
 }
