@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:holyday_calculator/constraints/values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +12,6 @@ class PreferencesProvider extends ChangeNotifier {
   final String _isSunIsHolidayTag = "IS_SUN_IS_HOLIDAY";
 
   // Api Cache
-  final String _apiCacheTag = 'API_CACHE_TAG';
 
   SharedPreferences sPreference;
   PreferencesProvider(this.sPreference);
@@ -47,7 +44,8 @@ class PreferencesProvider extends ChangeNotifier {
   }
 
   // User Country
-  String get userCountry => sPreference.getString(_countryTag) ?? country;
+  String get userCountry =>
+      sPreference.getString(_countryTag) ?? defaultCountry;
   set userCountry(String value) => _setUserCountryFromPref(value);
 
   void _setUserCountryFromPref(String value) async {

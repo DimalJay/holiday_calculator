@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:holyday_calculator/constraints/values.dart';
 
 ThemeData lightTheme = ThemeData(
-  colorScheme: const ColorScheme.light(
+  colorScheme: ColorScheme.light(
     primary: primaryColor,
     surface: primaryColor,
     secondary: primaryColor,
@@ -26,6 +26,7 @@ ThemeData lightTheme = ThemeData(
     elevation: 0.0,
     backgroundColor: Colors.transparent,
     foregroundColor: Colors.black,
+    iconTheme: IconThemeData(color: Colors.black, size: 24.0),
   ),
   checkboxTheme: CheckboxThemeData(
     fillColor: MaterialStateProperty.all(primaryColor),
@@ -33,4 +34,5 @@ ThemeData lightTheme = ThemeData(
       borderRadius: BorderRadius.circular(kBorderRadius * .2),
     ),
   ),
+  iconTheme: const IconThemeData(color: Colors.black54),
 );

@@ -3,9 +3,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:holyday_calculator/constraints/values.dart';
 
 ThemeData darkTheme = ThemeData(
-  colorScheme: const ColorScheme.dark(
+  colorScheme: ColorScheme.dark(
     primary: primaryColor,
     onPrimary: Colors.white,
+    surface: primaryColor,
+    secondary: primaryColor,
   ),
   textTheme: GoogleFonts.nunitoSansTextTheme(TextTheme(
     bodyText1: ThemeData.dark()
@@ -23,5 +25,18 @@ ThemeData darkTheme = ThemeData(
   )),
   appBarTheme: const AppBarTheme(
     elevation: 0.0,
+    backgroundColor: Colors.transparent,
+    foregroundColor: Colors.white,
+    iconTheme: IconThemeData(color: Colors.white, size: 24.0),
   ),
+  checkboxTheme: CheckboxThemeData(
+    fillColor: MaterialStateProperty.all(primaryColor),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(kBorderRadius * .2),
+    ),
+  ),
+  iconTheme: const IconThemeData(color: Colors.white60),
+  switchTheme: SwitchThemeData(
+      thumbColor: MaterialStateProperty.all(primaryColor),
+      trackColor: MaterialStateProperty.all(primaryColor.withOpacity(0.4))),
 );

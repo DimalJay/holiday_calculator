@@ -273,6 +273,7 @@ class _HomeScreenState extends State<HomeScreen>
           menuIcon,
           width: 24.0,
           height: 24.0,
+          color: Theme.of(context).appBarTheme.iconTheme?.color,
         ),
         onPressed: () {
           _globalKey.currentState?.openDrawer();

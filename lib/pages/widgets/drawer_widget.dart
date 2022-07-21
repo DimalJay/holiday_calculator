@@ -55,7 +55,6 @@ class DrawerWidget extends StatelessWidget {
                   icon: const Icon(
                     Icons.facebook,
                     size: 28.0,
-                    color: Colors.black87,
                   ),
                 ),
               ),
@@ -66,7 +65,6 @@ class DrawerWidget extends StatelessWidget {
                   icon: const Icon(
                     Icons.reddit,
                     size: 28.0,
-                    color: Colors.black87,
                   ),
                 ),
               ),
@@ -77,7 +75,6 @@ class DrawerWidget extends StatelessWidget {
                   icon: const Icon(
                     Icons.email_outlined,
                     size: 28.0,
-                    color: Colors.black87,
                   ),
                 ),
               )
