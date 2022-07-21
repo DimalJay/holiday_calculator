@@ -13,21 +13,11 @@ class DrawerWidget extends StatelessWidget {
     DraweItem(
       title: "About Us",
       icon: Icons.info_outline_rounded,
-      route: "/",
+      route: "/about_us",
     ),
     DraweItem(
       title: "Privacy Policy",
       icon: Icons.privacy_tip_outlined,
-      route: "/",
-    ),
-    DraweItem(
-      title: "Terms & Conditions",
-      icon: Icons.text_snippet_outlined,
-      route: "/",
-    ),
-    DraweItem(
-      title: "Contact Us",
-      icon: Icons.call,
       route: "/",
     ),
     DraweItem(

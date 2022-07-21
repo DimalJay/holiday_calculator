@@ -4,6 +4,7 @@ import 'package:holyday_calculator/constraints/theme/dark_theme.dart';
 import 'package:holyday_calculator/constraints/theme/light_theme.dart';
 import 'package:holyday_calculator/domain/controller/cache_controller.dart';
 import 'package:holyday_calculator/domain/providers/preference_provider.dart';
+import 'package:holyday_calculator/pages/about_us.dart';
 import 'package:holyday_calculator/pages/home/home.dart';
 import 'package:holyday_calculator/pages/settings/setings.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
       routes: {
         "/": (context) => const HomeScreen(),
         "/settings": (context) => const SettingsPage(),
+        "/about_us": (context) => const AboutUsPage(),
       },
     );
   }
