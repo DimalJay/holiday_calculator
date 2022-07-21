@@ -1,5 +1,9 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:holyday_calculator/constraints/values.dart';
 import 'package:holyday_calculator/domain/controller/holyday_controller.dart';
 import 'package:holyday_calculator/domain/models/country_model.dart';
@@ -10,7 +14,7 @@ import 'package:holyday_calculator/pages/result/radial_progress.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class ResultPage extends StatelessWidget {
+class ResultPage extends StatefulWidget {
   final DateTimeRange dateTimeRange;
   final bool onSat;
   final bool onSun;
@@ -24,16 +28,66 @@ class ResultPage extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<ResultPage> createState() => _ResultPageState();
+}
+
+class _ResultPageState extends State<ResultPage> {
+  BannerAd? _anchoredAdaptiveAd;
+  bool _isLoaded = false;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadAd();
+  }
+
+  Future<void> _loadAd() async {
+    // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
+    final AnchoredAdaptiveBannerAdSize? size =
+        await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+            MediaQuery.of(context).size.width.truncate());
+
+    if (size == null) {
+      log('Unable to get height of anchored banner.');
+      return;
+    }
+
+    _anchoredAdaptiveAd = BannerAd(
+      // TODO: replace these test ad units with your own ad unit.
+      adUnitId: Platform.isAndroid
+          ? 'ca-app-pub-3940256099942544/6300978111'
+          : 'ca-app-pub-3940256099942544/2934735716',
+      size: size,
+      request: AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (Ad ad) {
+          print('$ad loaded: ${ad.responseInfo}');
+          setState(() {
+            // When the ad is loaded, get the ad size and use it to set
+            // the height of the ad container.
+            _anchoredAdaptiveAd = ad as BannerAd;
+            _isLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          log('Anchored adaptive banner failedToLoad: $error');
+          ad.dispose();
+        },
+      ),
+    );
+    return _anchoredAdaptiveAd!.load();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder<List<Holiday>>(
           future: HolidayController.fetch(
             context,
-            start: dateTimeRange.start,
-            end: dateTimeRange.end,
-            isSat: onSat,
-            isSun: onSun,
-            country: country,
+            start: widget.dateTimeRange.start,
+            end: widget.dateTimeRange.end,
+            isSat: widget.onSat,
+            isSun: widget.onSun,
+            country: widget.country,
           ),
           builder: (context, snapshot) {
             List<Holiday> holidays = snapshot.data ?? [];
@@ -78,7 +132,8 @@ class ResultPage extends StatelessWidget {
               height: constraints.maxWidth,
               padding: const EdgeInsets.all(kPadding * 4),
               child: RadialProgressWidget(
-                max: HolidayController.getDaysFromRange(dateTimeRange).round(),
+                max: HolidayController.getDaysFromRange(widget.dateTimeRange)
+                    .round(),
                 value: holidays.length,
               ),
             );
@@ -100,6 +155,15 @@ class ResultPage extends StatelessWidget {
           const SliverToBoxAdapter(
             child: Center(child: Text(":( You have no Any Holidays")),
           ),
+        if (_anchoredAdaptiveAd != null && _isLoaded)
+          SliverToBoxAdapter(
+            child: Container(
+              color: Colors.green,
+              width: _anchoredAdaptiveAd!.size.width.toDouble(),
+              height: _anchoredAdaptiveAd!.size.height.toDouble(),
+              child: AdWidget(ad: _anchoredAdaptiveAd!),
+            ),
+          )
       ],
     );
   }
