@@ -62,7 +62,7 @@ class _SettingsPageState extends State<SettingsPage> {
       SettingsItem(
         leading: const Icon(Icons.location_city_rounded),
         title: "Country",
-        subtitle: "Sri Lanka (LK)",
+        subtitle: _selectedCountry,
         onTap: () => openUserCountryMenu(provider),
       ),
     ];
@@ -81,11 +81,19 @@ class _SettingsPageState extends State<SettingsPage> {
               title: const Text("Weekend Holidays"),
               children: [
                 ListTile(
-                  leading: Checkbox(value: true, onChanged: (value) {}),
+                  leading: Checkbox(
+                      value: provider.isSatIsHoliDay,
+                      onChanged: (value) {
+                        provider.isSatIsHoliDay = value ?? false;
+                      }),
                   title: const Text("Mark Saturady is Your Holiday"),
                 ),
                 ListTile(
-                  leading: Checkbox(value: true, onChanged: (value) {}),
+                  leading: Checkbox(
+                      value: provider.isSunIsHoliDay,
+                      onChanged: (value) {
+                        provider.isSunIsHoliDay = value ?? false;
+                      }),
                   title: const Text("Mark Sunday is Your Holiday"),
                 )
               ],
@@ -132,6 +140,11 @@ class _SettingsPageState extends State<SettingsPage> {
         itemCount: countryCodes.length,
       ),
     );
+  }
+
+  String get _selectedCountry {
+    final provider = Provider.of<PreferencesProvider>(context);
+    return Country.fromCC(provider.userCountry).name;
   }
 
   ListTile _settingListTile(SettingsItem settingsItem) {

@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:holyday_calculator/constraints/values.dart';
 import 'package:holyday_calculator/country_code.dart';
+import 'package:holyday_calculator/domain/models/country_model.dart';
+import 'package:holyday_calculator/domain/providers/preference_provider.dart';
 import 'package:holyday_calculator/pages/admob.dart';
 import 'package:holyday_calculator/pages/home/suggestions.dart';
 import 'package:holyday_calculator/pages/result/result.dart';
 import 'package:holyday_calculator/pages/widgets/date_picker.dart';
 import 'package:holyday_calculator/pages/widgets/drawer_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,9 +24,9 @@ class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late DateTimeRange dateTimeRange;
   late DateRangePickerController dateRangePickerController;
-  bool isSat = true;
-  bool isSun = true;
-  String country = "lk";
+  // bool isSat = true;
+  // bool isSun = true;
+  //String country = "lk";
 
   // Admob
   late AdmobIntergration admobIntergration;
@@ -67,6 +70,8 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<PreferencesProvider>(context);
+
     return Scaffold(
       key: _globalKey,
       appBar: _appBar(context),
@@ -87,22 +92,23 @@ class _HomeScreenState extends State<HomeScreen>
               _buildSuggestions(),
 
               // Language Selector
-              _buildLangSelector(),
+              _buildCountrySelector(provider),
 
               // Calaneder View
               _calanderView(),
 
               // Weekend Select
-              _weekendSelector(),
+              _weekendSelector(provider),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: _buildBottomBarButton(context),
+      bottomNavigationBar: _buildBottomBarButton(context, provider),
     );
   }
 
-  Widget _buildBottomBarButton(BuildContext context) {
+  Widget _buildBottomBarButton(
+      BuildContext context, PreferencesProvider provider) {
     return Padding(
       padding: const EdgeInsets.all(kPadding),
       child: ElevatedButton.icon(
@@ -110,8 +116,8 @@ class _HomeScreenState extends State<HomeScreen>
           Navigator.of(context).push(MaterialPageRoute(builder: (_) {
             return ResultPage(
               dateTimeRange: dateTimeRange,
-              onSat: isSat,
-              onSun: isSun,
+              onSat: provider.isSatIsHoliDay,
+              onSun: provider.isSunIsHoliDay,
               language: country,
             );
           }));
@@ -151,23 +157,23 @@ class _HomeScreenState extends State<HomeScreen>
     });
   }
 
-  Row _weekendSelector() {
+  Widget _weekendSelector(PreferencesProvider provider) {
     return Row(
       children: [
         _weekendCheckBox(
             title: "Saturday is Holiday",
-            value: isSat,
+            value: provider.isSatIsHoliDay,
             onChanged: (value) {
               setState(() {
-                isSat = value ?? false;
+                provider.isSatIsHoliDay = value ?? false;
               });
             }),
         _weekendCheckBox(
             title: "Sunday is Holiday",
-            value: isSun,
+            value: provider.isSunIsHoliDay,
             onChanged: (value) {
               setState(() {
-                isSun = value ?? false;
+                provider.isSunIsHoliDay = value ?? false;
               });
             }),
       ],
@@ -196,26 +202,45 @@ class _HomeScreenState extends State<HomeScreen>
     });
   }
 
-  DropdownButton<String> _buildLangSelector() {
-    return DropdownButton<String>(
-      value: country,
-      hint: const Text("Choose Country"),
-      icon: const Icon(Icons.keyboard_arrow_down_rounded),
-      elevation: 16,
-      isExpanded: true,
-      underline: Container(),
-      onChanged: (String? newValue) {
-        setState(() {
-          country = newValue!;
-        });
-      },
-      items: countryCodes.map<DropdownMenuItem<String>>((value) {
-        return DropdownMenuItem<String>(
-          value: value.code,
-          child: Text(value.name),
+  Widget _buildCountrySelector(PreferencesProvider provider) {
+    return ListTile(
+      title: Text(_selectedCountry),
+      trailing: const Icon(Icons.keyboard_arrow_down),
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) => userCountryWidget(provider),
         );
-      }).toList(),
+      },
     );
+  }
+
+  Widget userCountryWidget(PreferencesProvider provider) {
+    return AlertDialog(
+      content: ListView.builder(
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          Country country = countryCodes[index];
+          return ListTile(
+            trailing:
+                provider.userCountry.toLowerCase() == country.code.toLowerCase()
+                    ? const Icon(Icons.done)
+                    : null,
+            title: Text(country.name),
+            onTap: () {
+              provider.userCountry = country.code;
+              Navigator.pop(context);
+            },
+          );
+        },
+        itemCount: countryCodes.length,
+      ),
+    );
+  }
+
+  String get _selectedCountry {
+    final provider = Provider.of<PreferencesProvider>(context);
+    return Country.fromCC(provider.userCountry).name;
   }
 
   AppBar _appBar(BuildContext context) {

@@ -16,52 +16,54 @@ class PreferencesProvider extends ChangeNotifier {
 
   // Dark Mode
   bool get darkMode => sPreference.getBool(_darkModeTag) ?? false;
-  set darkMode(bool value) => setDarkModeToPref(value);
+  set darkMode(bool value) => _setDarkModeToPref(value);
 
-  void setDarkModeToPref(bool value) async {
+  void _setDarkModeToPref(bool value) async {
     await sPreference.setBool(_darkModeTag, value);
     notifyListeners();
   }
 
   // First Time
   bool get firstTime => sPreference.getBool(_appFirstTime) ?? true;
-  set firstTime(bool value) => setFistTimeToPref(value);
+  set firstTime(bool value) => _setFistTimeToPref(value);
 
-  void setFistTimeToPref(bool value) async {
+  void _setFistTimeToPref(bool value) async {
     await sPreference.setBool(_appFirstTime, value);
     notifyListeners();
   }
 
   // App language
   String get appLanguage => sPreference.getString(_languageTag) ?? language;
-  set appLanguage(String value) => setAppLanguageFromPref(value);
+  set appLanguage(String value) => _setAppLanguageFromPref(value);
 
-  void setAppLanguageFromPref(String value) async {
+  void _setAppLanguageFromPref(String value) async {
     await sPreference.setString(_languageTag, value);
+    notifyListeners();
   }
 
   // User Country
   String get userCountry => sPreference.getString(_countryTag) ?? country;
-  set userCountry(String value) => setUserCountryFromPref(value);
+  set userCountry(String value) => _setUserCountryFromPref(value);
 
-  void setUserCountryFromPref(String value) async {
+  void _setUserCountryFromPref(String value) async {
     await sPreference.setString(_countryTag, value);
+    notifyListeners();
   }
 
   // Is Saturaday is Holiday
   bool get isSatIsHoliDay => sPreference.getBool(_isSatIsHoliday) ?? true;
-  set isSatIsHoliDay(bool value) => setIsSatIsHolidayToPref(value);
+  set isSatIsHoliDay(bool value) => _setIsSatIsHolidayToPref(value);
 
-  void setIsSatIsHolidayToPref(bool value) async {
+  void _setIsSatIsHolidayToPref(bool value) async {
     await sPreference.setBool(_isSatIsHoliday, value);
     notifyListeners();
   }
 
   // Is Sunday is Holiday
   bool get isSunIsHoliDay => sPreference.getBool(_isSunIsHoliday) ?? true;
-  set isSunIsHoliDay(bool value) => setIsSunIsHolidayToPref(value);
+  set isSunIsHoliDay(bool value) => _setIsSunIsHolidayToPref(value);
 
-  void setIsSunIsHolidayToPref(bool value) async {
+  void _setIsSunIsHolidayToPref(bool value) async {
     await sPreference.setBool(_isSunIsHoliday, value);
     notifyListeners();
   }

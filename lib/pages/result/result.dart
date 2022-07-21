@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:holyday_calculator/constraints/values.dart';
 import 'package:holyday_calculator/domain/controller/holyday_controller.dart';
+import 'package:holyday_calculator/domain/models/country_model.dart';
 import 'package:holyday_calculator/domain/models/date_tag.dart';
 import 'package:holyday_calculator/domain/models/holyday.dart';
+import 'package:holyday_calculator/domain/providers/preference_provider.dart';
 import 'package:holyday_calculator/pages/result/radial_progress.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class ResultPage extends StatelessWidget {
   final DateTimeRange dateTimeRange;
@@ -35,14 +38,15 @@ class ResultPage extends StatelessWidget {
             List<Holiday> holidays = snapshot.data ?? [];
 
             if (snapshot.connectionState == ConnectionState.done) {
-              return _body(holidays, snapshot.hasData);
+              return _body(context,
+                  holidays: holidays, hasData: snapshot.hasData);
             } else if (snapshot.connectionState == ConnectionState.waiting) {
               return const Scaffold(
                 body: Center(child: CircularProgressIndicator()),
               );
             } else {
               return Scaffold(
-                appBar: _appbar(),
+                appBar: _appbar(context),
                 body: const Center(child: Text("Hmm, Having Trouble")),
               );
             }
@@ -50,18 +54,21 @@ class ResultPage extends StatelessWidget {
     );
   }
 
-  AppBar _appbar() {
+  AppBar _appbar(BuildContext context) {
     return AppBar(
-      title: const Text("Available Holidays"),
+      title: Text(
+          "Available Holidays in ${Country.fromCC(context.read<PreferencesProvider>().userCountry).name}"),
     );
   }
 
-  CustomScrollView _body(List<Holiday> holidays, bool hasData) {
+  CustomScrollView _body(BuildContext context,
+      {required List<Holiday> holidays, required bool hasData}) {
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
-        const SliverAppBar(
-          title: Text("Available Holidays"),
+        SliverAppBar(
+          title: Text(
+              "Available Holidays in ${Country.fromCC(context.read<PreferencesProvider>().userCountry).name}"),
         ),
         SliverToBoxAdapter(
           child: LayoutBuilder(builder: (context, constraints) {
