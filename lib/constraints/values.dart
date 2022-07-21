@@ -21,3 +21,10 @@ const String facebookPage = 'https://facebook.com/teskilltechnologies';
 const String discordServer = 'https://facebook.com/teskilltechnologies';
 const String email =
     'mailto:teskilltechnologies@gmail.com?subject=Holiday%20Calculator%20App';
+
+const String companyName = 'TesKill Technologies';
+const String companySologan = "Committed to a Better Future";
+const String companyLogo = 'assets/branding/logo.png';
+
+const whoareweDescription =
+    'TesKill is not just a Team, It\'s a Place. We are trying to Invent Better Technology for the Future. Engaging Human and Technology.';

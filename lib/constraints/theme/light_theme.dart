@@ -6,6 +6,7 @@ import 'package:holyday_calculator/constraints/values.dart';
 ThemeData lightTheme = ThemeData(
   colorScheme: ColorScheme.light(
     primary: primaryColor,
+    onSurface: Colors.black,
     surface: primaryColor,
     secondary: primaryColor,
   ),
