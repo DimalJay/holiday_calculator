@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:holyday_calculator/country_code.dart';
+import 'package:holyday_calculator/domain/controller/cache_controller.dart';
 import 'package:holyday_calculator/domain/models/country_model.dart';
 import 'package:holyday_calculator/domain/providers/preference_provider.dart';
 import 'package:provider/provider.dart';
@@ -97,11 +98,22 @@ class _SettingsPageState extends State<SettingsPage> {
                   title: const Text("Mark Sunday is Your Holiday"),
                 )
               ],
+            ),
+            ListTile(
+              title: const Text("Clear Cache"),
+              leading: const Icon(Icons.cookie_rounded),
+              onTap: clearCache,
             )
           ],
         ),
       ),
     );
+  }
+
+  void clearCache() {
+    context.read<ApiCacheProvider>().clear();
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text("Cache Cleared")));
   }
 
   Widget themeSwitchWidget(PreferencesProvider provider) {

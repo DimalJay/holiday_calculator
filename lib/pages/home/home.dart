@@ -118,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen>
               dateTimeRange: dateTimeRange,
               onSat: provider.isSatIsHoliDay,
               onSun: provider.isSunIsHoliDay,
-              language: country,
+              country: provider.userCountry,
             );
           }));
         },

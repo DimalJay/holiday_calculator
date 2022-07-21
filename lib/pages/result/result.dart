@@ -14,13 +14,13 @@ class ResultPage extends StatelessWidget {
   final DateTimeRange dateTimeRange;
   final bool onSat;
   final bool onSun;
-  final String language;
+  final String country;
   const ResultPage({
     Key? key,
     required this.dateTimeRange,
     this.onSat = true,
     this.onSun = true,
-    required this.language,
+    required this.country,
   }) : super(key: key);
 
   @override
@@ -28,11 +28,12 @@ class ResultPage extends StatelessWidget {
     return Scaffold(
       body: FutureBuilder<List<Holiday>>(
           future: HolidayController.fetch(
+            context,
             start: dateTimeRange.start,
             end: dateTimeRange.end,
             isSat: onSat,
             isSun: onSun,
-            language: language,
+            country: country,
           ),
           builder: (context, snapshot) {
             List<Holiday> holidays = snapshot.data ?? [];

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:holyday_calculator/constraints/values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,8 +10,11 @@ class PreferencesProvider extends ChangeNotifier {
   final String _appFirstTime = "FISRT_TIME";
   final String _languageTag = "LANGUAGE";
   final String _countryTag = "COUNTRY";
-  final String _isSatIsHoliday = "IS_SAT_IS_HOLIDAY";
-  final String _isSunIsHoliday = "IS_SUN_IS_HOLIDAY";
+  final String _isSatIsHolidayTag = "IS_SAT_IS_HOLIDAY";
+  final String _isSunIsHolidayTag = "IS_SUN_IS_HOLIDAY";
+
+  // Api Cache
+  final String _apiCacheTag = 'API_CACHE_TAG';
 
   SharedPreferences sPreference;
   PreferencesProvider(this.sPreference);
@@ -51,20 +56,24 @@ class PreferencesProvider extends ChangeNotifier {
   }
 
   // Is Saturaday is Holiday
-  bool get isSatIsHoliDay => sPreference.getBool(_isSatIsHoliday) ?? true;
+  bool get isSatIsHoliDay => sPreference.getBool(_isSatIsHolidayTag) ?? true;
   set isSatIsHoliDay(bool value) => _setIsSatIsHolidayToPref(value);
 
   void _setIsSatIsHolidayToPref(bool value) async {
-    await sPreference.setBool(_isSatIsHoliday, value);
+    await sPreference.setBool(_isSatIsHolidayTag, value);
     notifyListeners();
   }
 
   // Is Sunday is Holiday
-  bool get isSunIsHoliDay => sPreference.getBool(_isSunIsHoliday) ?? true;
+  bool get isSunIsHoliDay => sPreference.getBool(_isSunIsHolidayTag) ?? true;
   set isSunIsHoliDay(bool value) => _setIsSunIsHolidayToPref(value);
 
   void _setIsSunIsHolidayToPref(bool value) async {
-    await sPreference.setBool(_isSunIsHoliday, value);
+    await sPreference.setBool(_isSunIsHolidayTag, value);
     notifyListeners();
+  }
+
+  void clear() {
+    sPreference.clear();
   }
 }
