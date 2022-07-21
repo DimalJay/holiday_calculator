@@ -211,8 +211,8 @@ class _HomeScreenState extends State<HomeScreen>
       },
       items: countryCodes.map<DropdownMenuItem<String>>((value) {
         return DropdownMenuItem<String>(
-          value: value['code'],
-          child: Text(value['name']!),
+          value: value.code,
+          child: Text(value.name),
         );
       }).toList(),
     );
